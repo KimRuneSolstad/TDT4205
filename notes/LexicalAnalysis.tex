@@ -1,0 +1,66 @@
+\section{Lexical Analysis}
+A lexical analyser reads characters from the input, and groups them into "token objects". 
+\emph{Removal of White Space and Comments:} Most languages allow arbitrary amounts of whitespace between tokens. Comments are lkewise ignored during parsing, so they may also be treated as whitespace.
+\emph{Reading Ahead:} A general approach to reading ahead on the input, is to maintain an input buffer from wich the lexical analyzer can read and push back characters. One character read-ahead usually suffices, so a simple solution is to use a variable, say peek, to hold the next input character. The lexical analyser reads ahead only when it must. 
+\emph{Constants:} The job of collecting characters into integers and computing their collective numerical value is generally given to a lexical analyser, so numbers can be treated as single units during parsing and translation. 
+\emph{Recognizing Keywords and Identifiers:} The lexical analyser solves two problems by using a table to hold character strings
+\begin{enumerate}
+	\item{\emph{Sinlge Representation:} A string table can insulate the rest of the compiler from the representation of strings, since the phases of the compiler of the compiler can work with references or pointers to the string in the table.} 
+	\item{\emph{Reserved Words:} Reserved words can be implemented by initializing the string table with the reserved strings and their tokens.}
+\end{enumerate}
+
+Lexical analysers can be divided into a cascade of two processes.
+\begin{enumerate}
+	\item{Scanning: consists of the simple processes that do not require tokenization}
+	\item{Lexical analysis: where the scanner produces the sequence of tokens}
+\end{enumerate}
+
+\subsection{Input Buffering}
+\emph{Buffer pair:} One pointer marks the beginning of a lexeme, another scans ahead until a pattern match is found.
+\emph{Sentinels:} A special character that cannot be part of the source program. A natural choise is the character \textbf{eof}
+
+\subsection{Specification of Tokens}
+\emph{Regular expressions:} The regular expressions are built recursivley out of smaller regular expressions. Two rules form the basis.
+\begin{enumerate}
+	\item{$\epsilon$ is a regular expression, and $L(\epsilon)$ is ${\epsilon}$, that is, the language whose sole member is the empty string.}
+	\item{If $a$ is a symbol in $\sigma$, then \textbf{a} is a regular expression, and $L(\textbf{a}) = \{a\}$, that is, the language with one string, of length one, with \emph{a} in its one position.}
+\end{enumerate}  
+There are four parts to the induction. 
+\begin{enumerate}
+	\item{$(r)|(s)$ denotes the language $L(r)\cup L(S)$}
+	\item{$(r)(s)$ denotes the language $L(r)L(s)$}
+	\item{$(r)^*$ denotes $(L(r))^*$}
+	\item{$(r)$ denotes $L(r)$}
+\end{enumerate}
+
+\subsection{Recognition of tokens}
+\emph{Transition Diagrams:} Have a collection of nodes or circles called states. \emph{edges:} are directed from one state of the transition diagram to another. \\
+\emph{Recognition of Reserved Words and Identifiers:} Can be done by either install teh reserved words in the symbol table initially or by creating separate transition diagrams for each keyword.
+
+\subsection{The Lexical-Analyser Generator \emph{Lex}}
+A tool that allows one to specify a lexical analyser by specifying regular expressions to describe patterns for tokens. A lex program has a structure with sections for declarations, translation rules and auxiliary functions. \emph{Lookahead Operator:} 
+\subsection{Finite Automata}
+Finite automata: acceptors for languages described by regular expressions. \emph{Acceptor:} determines in an input string belongs to a language L. \emph{DFA:} the transtition from each state is uniquely determined by the current input character. \emph{NFA:} There may be multiple possible choises, and some spontanious transtition without input.\\
+The McNaughton-Yamada-Thompson algorithm can be used to construct an NFA from a regular expression. 
+\subsection{Design of a Lexical-Analyser Generator}
+A \emph{Lex} program is turned into a transition table and actions, wich are used by a finite-automaton simulator.
+
+\subsection{Optimizations of DFA-Based Pattern Matchers}
+functions computed from the syntax tree.
+\begin{enumerate}
+	\item{\emph{nullable(n):}true iff subexpression represented by $n$ has $\epsilon$ in its language.}
+	\item{\emph{firstpos(n):} The set of positions in the subtree rooted at $n$ that correspond to the first symbol of at least one string in the language of the subexpression rooted at $n$.}
+	\item{\emph{lastpos(n):} The set of positions in the subtree rooted at $n$ that correspond to the last symbol of at least one string in the language of the subexpression rooted at $n$.}
+	\item{\emph{followups(n):} for a position p, is the set of positions q in the entire syntax tree such that there is some string $x = a_1a_2\ldots a_n$ in $L\big((r)\#)$ such that for some $i$, there is a way to explain the membership of $x$ in $L\big((r)\#\big)$ by matching $a_i$ to position $p$ of the syntax tree and $a_{i+1}$ to position $q$.} 
+\end{enumerate}
+
+optimizations can be made by
+\begin{enumerate}
+	\item{\emph{Converting a regular expression directly to a DFA}}
+	\item{\emph{Minimizing the number of states of a DFA}}
+\end{enumerate} 
+
+
+
+
+

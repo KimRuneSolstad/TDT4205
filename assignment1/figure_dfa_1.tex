@@ -1,0 +1,21 @@
+\begin{tikzpicture}[->, shorten >=1pt, auto]
+	\node[state,initial] (A)   {$S_0$}; 
+	\node[state] (B) [right=of A] {$S_1$}; 
+	\node[state] (C) [right=of B] {$S_2$};	
+	\node[state] (D) [right=of C] {$S_3$};
+	\node[state] (E) [above right=of D] {$S_4$};
+	\node[state, accepting] (F) [right=of D] {$S_5$};
+	\path[->]
+	(A) edge 				node 	{1}	(B)
+	(B) edge [loop above] 	node	{0}	(B)
+		edge				node	{1}	(C)
+	(C)	edge				node	{0} (D)
+	(D)	edge				node	{1}	(E)
+		edge				node	{0}	(F)
+	(E)	edge [loop above]	node	{1}	(E)
+		edge [bend right]	node	{0}	(F)
+	(F)	edge [loop below]	node	{0}	(F)
+		edge [bend right]	node	{1}	(E);
+\end{tikzpicture}
+
+

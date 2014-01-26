@@ -1,0 +1,56 @@
+\section{Introduction}
+
+\subsection{Language Processors}
+\emph{Compiler} - Program that can read a program in one language, and translate it into an equivalent program ni another language. \\
+\emph{Interpreter} - Program that directly executes operations specified in source program on inputs supplied by user. \\
+\emph{preprocessor} - Program that collects the source program befoure being further processed by the compiler. \\
+\emph{Assembler} - Program that reads assembly code and translate it to relocatable machine code. \\
+\emph{Linker} - Links relocatable machine code with relocatable object files. \\
+\emph{Loader} - Puts together executable object files into memory for execution. \\
+
+\subsection{Structure of a Compiler}
+Compiler divided into:\\
+\emph{analysis part:} Referred to as the "front end". Breaks up the source program into constituent pieces and imposes a gramatical structure on them. This structure is used to create intermediate representation of the source program. Provides informative messages if the program is ill formed. Collects information about source program and stores it in a symbol table. \\
+\emph{synthesis part:} Reffered to as the "back end". Constructs the target program from the intermediate representation and symbol table. \\ 
+
+\emph{Lexical Analysis - }
+First phase of a compiler. Also called tokenizing. Reads the stream of characters and groups the characters into meaningfull sequences called lexemes. A token is produced for each lexeme. A token consists of a \emph{token-name:} abstract symbol used during syntax analysis, and a \emph{attribute-value:} points to an entry in the symbol table. \\ 
+
+\emph{Syntax Analysis - }
+Second phase of the compiler. Also called parsing. Uses the first components of the tokens produced to create a tre-like intermediate representation. \\
+
+\emph{Semantic Analysis - }
+Uses the syntax tree and the information in the symbol table to check the source program for semantic consistency with the language definition. Type checking: compiler checks that each operator has matching operands. \\
+
+\emph{Intermediate Code generation - } Generation of an explicit low-level or machine-linke intermediate representation. This can be thought of as a program for an abstract machine. This should be easy to produce and easy to translate into the target machine. \\
+
+\emph{Code optimization - } attempts to improve the intermediate code so that better target code will result. \\
+
+\emph{Code generation - } maps the intermediate representation of the source program into the target language. \\ 
+
+\emph{Symbol-Table management:} record the variable names used in the source program and collect information about various attributes of each name. Several phases can be collected into one pass. \\ 
+
+\subsubsection{Applications of Compiler Technology}
+Optimizations dif computer architectures can be done through parallelism and memory hierarcies. \emph{Memory hierarcies: } Several levels of storage with different speeds and sizes. Level closest to processor, smallest and fastest. Using registes effectivley is probably the single most important problem in optimizing a program.
+\emph{Program Translation}
+\begin{enumerate}
+	\item{\emph{Binary Translation:} translate binary code for one machine to that of another. Can also be used to provide backward compatibility.}
+	\item{\emph{Hardware Synthesis:} Hardware design is usually described at the register transfer level (rtl). Hardware synthesis tools tools tanslate RTL descriptions into gates, wich are then mapped to transistors and eventually to physical layout.}
+	\item{\emph{Database Query Interpreters:} Compiled into commands to search a database for records. }
+	\item{\emph{Compiled Simulation:} Inputs to a simultor usually include the description of the design and specific input parameters for that particular run. }
+\end{enumerate}
+
+\subsubsection{Software Productivity Tools}
+\begin{enumerate}
+	\item{\emph{type checking: } Cathces errors for example when errors are applied to the wrong type of object.} 
+	\item{\emph{Bounds checking: } Automatic range checking can prevent buffer overflows and range checks. }
+	\item{\emph{Memory-Management Tools:} Automatic memory management obliterates all memory-management errors. }
+\end{enumerate}
+
+\subsubsection{Programming Language Basics}
+\emph{Static/Dynamic:} If a language uses a policy that allows the compiler o decide an issue, we say that the language uses a static policy or that the issue can be decided at compile time. On the other hand, a policy that only allows a decision to be made when we execute the program is said to be a dynamic policy or to require a decision at runtime. A language uses static scope or lexical scope if it is possible to determine the scope of a declaration by looking only at the program. Otherwise the language uses a dynamic scope. \\
+\emph{environments and sates:} The environment is a mapping from names to locations in the store. The state is a mapping from locations in store to their values. 
+\emph{Actual parameters:} Those used in call of a procedure. \emph{Formal parameter: } Those used in the procedure definition. 
+
+ 
+
