@@ -20,3 +20,55 @@ CFG consists of:
 \subsection{Writing a Grammar}
 \emph{Left recursion:} A grammar is left recursive if it has a nonterminal A such that there is a derivation $A \rightarrow^+ A\alpha$ for some string $\alpha$. Top-down parsers cannot use a left-recursive grammar. \\
 \emph{left factoring:} A grammar transformation used to produce a grammar suitable for predictive or top-down parsing. Done by finding the longest prefix $\alpha$ common to two or more of its alternative. Add a new production with \emph{remaining}|$\epsilon$. \\
+
+\subsection{Top-Down Parsing}
+Top-Down Parsing can be viewed as the problem of constructing a parse-tree starting from the root and creating the nodes depth-first. It can also be viewed as finding a leftmost derivation for an input. \\
+\emph{Recursive-Descent Parsing:} A recursive-descent parsing program consists of a set of procedures, one for each terminal. Begins with procedure of start symbol. Halts and announces successs if procedure body scans the entire string. May require backtracking. \\
+\emph{FIRST and FOLLOW}
+During top-down parsing, FIRST and FOLLOW allow us to choose wich production to apply, based on the next symbol. \\
+\emph{LL(1) Grammars:} Left to right, leftmost derivation, using one inputsymbol as lookahead. No leftrecursive or ambigous grammar can be LL(1).\\
+\emph{Nonrecursive Predictive Parsing:} Buildt by maintaining a stack explicitly rather than implicitly via recursive calls. \\
+\emph{Error Recovery in Predictive Parsing:} Panic Mode error recovery is based on the idea of skipping over symbols on the input until a token in a selected set of synchronizing tokens appear. 
+
+\subsection{Bottom-Up Parsing}
+The construction of a parse-tree for an input string beginning at the leaves working towards the root. \\
+\emph{Reductions:} At each reduction, a specific substring matching the body of a production is replaced by the non-terminal ath the head of that production. \\
+\emph{Handle Pruning:} A handle is a substring that matches the body of a production, and whose reduction represents one step along the reverse of a rightmost derivation.  \\
+\emph{Shift-Reduce parsing:} a form of bottom up parsing in wich a stack holds drammar symbols and an input buffer holds the rest of the  string to be parsed. \emph{Shift:} shift the next input symbol onto the top of the stack. \emph{reduce:} The right end of the string to be reduced must be at the top of the stack. Locate the left end of the string within the stack and decide with what non-terminal to replace the string. \emph{Accept:} Announce succsesful completion of parsing. \emph{Error:} Discover a syntax error and call an error recovery routine.\\
+\emph{Conflicts during Shift reduce parsing:} Conflict when parser cannot decide wether to shift or reduce or when it cannot decide wich reductions to make. 
+
+\subsection{Introduction to LR parsing: Simple LR}
+\emph{SLR:} Simple LR. LR is table-driven. 
+\begin{enumerate}
+	\item{LR parsers can be constructed to recognize virtually all programming language constructs for wich context-free grammars can be written. }
+	\item{The LR parsing method is the most general backtracking shift-reduce parsing method known.}
+	\item{An LR parser can detect a syntactic error as soon as it is possible to do so on a left to right scan of the input. }
+	\item{The class of grammars that can be parsed using LR methods is a proper supreset of the class of drammars that can be parsed with predictive or LL methods.}
+\end{enumerate}
+The drawback of the LR method is that it is to much work to construct an LR parser by hand for a typical programming-language grammar.
+
+\subsection{Items and the LR(0) Automaton}
+An LR parser makes shift/reduce decisios by maintaining states to keep track of where we are in a parse. Item $A \rightarrow .XYZ$ indicates that we hope to see a string derivable from XYZ next on the input. \emph{canonical}LR(0) collection provides the basis for constructing deterministic finite automaton that is used to make parsing decisions. The automaton is called LR(0) automation. To construct the canonical LR(0) collection for a grammar, we define an augmented grammar and the functions GOTO and CLOSURE. \\\emph{CLOSURE}If \emph{I} is the set of items for a grammar G, then CLOSURE(\emph{I}) is the set of items constructed from \emph{I} by the two rules.
+\begin{enumerate}
+	\item{add every imtem in I to CLOSURE(I).}
+	\item{if $A \rightarrow \alpha . B \beta$ is in closure(I) and $B \rightarrow \gamma$ is a production, add $B$ to CLOSURE(I) if it is not there.}
+\end{enumerate}
+
+\emph{GOTO(I, X)} I is a set of items, X is a grammar symbol. GOTO is used to define the transitions in the LR(0) automaton for a grammar.  \\
+
+\subsection{The LR-Parsing Algorithm}
+The LR parser consists of an input, an output, a stack, a driver program ans a parsing table that has two parts, ACTION and GOTO. \\ 
+The parsing table consists of two parts. ACTION and GOTO. 
+\begin{enumerate}
+	\item{The ACTION function takes as arguments a state $i$ and a teminal $a$. The value of ACTION can have one of four forms.}
+	\begin{enumerate}
+		\item{Shift J where J is a state.}
+		\item{Reduce $A \rightarrow \beta$} 
+		\item{Accept}
+		\item{Error} 
+	\end{enumerate}
+	\item{If $GOTO(I_j, A] = I_J$ then GOTO also maps a state $i$ and a nonterminal A to state $j$.}
+\end{enumerate}
+
+\subsection{Constructing SLR-Parsing Tables}
+The SLR method begins with $SLR$ begins with $LR(0)$ items and $LR(0)$ automata. Given a grammar $G$ we augment $G$ to produce $G'$ with a new start symbol $S'$. From $G'$ we construct $C$, the canonical collection of sets of items for $G'$ together with the GOTO function. ACTION and GOTO are constructed using the "Constructing an SLR-parsig table" algorithm.
