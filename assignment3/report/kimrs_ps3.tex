@@ -1,0 +1,116 @@
+\documentclass[a4paper, utf8]{article}
+\author{Kim Rune Solstad}
+\title{Assignment 3, TDT4205}
+%\usepackage{listings, tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+%\usetikzlibrary{automata, positioning}
+
+%\lstset{language=bash}
+
+\begin{document}
+\maketitle
+\section*{Problem 1, Parsing}
+\subsection*{a)} - The difference between a top-down parsser and a bottom-up parser is that the top-down parser constructs a parsetree starting from the root node. The bottom-up parser starts from the leaves.\\
+\subsection*{b)} - The LL parser uses leftmost derivations. The LR uses rightmost deriations. 
+\section*{Problem 2, Top-Down parsing}
+\subsection*{a)} \\
+\emph{First(A)} = $\{a, b, c, d, e, f, \epsilon\}$ \\
+\emph{First(B)} = $\{b\}$ \\
+\emph{First(C)} = $\{b, \epsilon\}$ \\
+\emph{First(D)} = $\{b, d, e, \epsilon\}$ \\
+\emph{First(E)} = $\{e, \epsilon \}$ \\
+\emph{First(F)} = $\{c, f\}$ \\
+\\
+\emph{Follow(A)} = $\{\$, c, e, f\}$ \\
+\emph{Follow(B)} = $\{\$, b, c, f\}$ \\
+\emph{Follow(C)} = $\{\$, c, e, f\}$ \\
+\emph{Follow(D)} = $\{\$, c, e, f\}$ \\
+\emph{Follow(E)} = $\{b, c, f\}$ \\
+\emph{Follow(F)} = $\{\$, c, e, f\}$ \\
+
+\subsection*{b)} \\
+\begin{tabular}{ l | l l l l l l l}
+Non terminals 	& a 			& b 				& c	 			& d 			& e 				& f 				& \$ 			\\
+\hline
+A		& $A \rightarrow aB$ 	& $A \rightarrow D$		& $A \rightarrow F$  		& $A \rightarrow D$ 	& $A \rightarrow D$  		& $A \rightarrow F$		& $A \rightarrow D$	\\
+B		&			& $B \rightarrow bC$		&				&			&				&				&			\\
+C		& 			& $C \rightarrow bC$		& $C \rightarrow \epsilon$	&			& $C \rightarrow \epsilon$	& $C \rightarrow \epsilon$	& $C \rightarrow \epsilon$ \\
+D		& 			& $D \rightarrow EB$		& $D \rightarrow EB$		& $D \rightarrow dBEF$	& $D \rightarrow EB$		& $D \rightarrow EB$		& $D \rightarrow EB$ \\
+E		& 			& $E \rightarrow \epsilon$	& $E \rightarrow \epsilon$	&			& $E \rightarrow e$		& $E \rightarrow \epsilon$	& \\
+F		&			&				& $F \rightarrow C$		&			&				& $F \rightarrow f$		& \\
+
+\end{tabular}
+
+\subsection*{c)} \\
+\begin{tabular}{l l l l }
+Matched	&Stack	&Input	&Action				\\
+\hline
+	&A\$	&dbbbf\$&$A \rightarrow D$		\\
+	&dBEF\$	&dbbbf\$&$D \rightarrow dBEF$		\\
+d	&BEF\$	&bbbf\$	&$match(d)$			\\
+d	&bCEF\$	&bbbf\$	&$B \rightarrow bC$		\\
+db	&CEF\$	&bbf\$	&$match(b)$			\\
+db	&bCEF\$	&bbf\$	&$C \rightarrow bC$		\\
+dbb	&CEF\$	&bf\$	&$match(b)$			\\
+dbb	&bCEF\$	&bf\$	&$C \rightarrow bC$		\\
+dbbb	&CEF\$	&f\$	&$match(b)$			\\
+dbbb	&EF\$	&f\$	&$C \rightarrow \epsilon$	\\
+dbbb	&F\$	&f\$	&$E \rightarrow \epsilon$	\\
+dbbb 	&f\$	&f\$	&$F \rightarrow	f$		\\
+dbbbf	&\$	&\$	&$match(f)$			\\
+\end{tabular}
+
+\section*{Problem 3, Bottom-Up parsing}
+\subsection*{a)}
+\includegraphics[scale=0.7]{LR0}
+\subsection*{b)}
+\begin{tabular}{l | l l l l l l | l l l l l l}
+State	& \multicolumn{6}{| c |}{Action} & \multicolumn{6}{c}{Goto}					\\
+\hline
+	&a	&b	&c	&d	&e	&f	&A	&B	&D	&E	&F	&\$	\\
+\hline
+0	&s10	&s6	&s8	&s9	&s7	&s6	&1	&4	&2	&5	&3	&	\\
+1	&	&	&	&	&	&	&	&	&	&	&	&acc	\\
+2	&	&	&	&	&r2	&	&	&	&	&	&	&r2	\\
+3	&	&	&	&	&r3	&	&	&	&	&	&	&r3	\\
+4	&	&s12	&	&	&	&	&	&	&	&	&	&	\\
+5	&	&s6	&	&	&	&	&	&13	&	&	&	&	\\
+6	&	&	&	&	&r5	&	&	&	&	&	&	&r5	\\
+7	&	&r8	&r8	&	&	&r8	&	&	&	&	&	&	\\
+8	&	&	&	&	&r9	&	&	&	&	&	&	&r9	\\
+9	&	&s6	&	&	&	&	&	&14	&	&	&	&	\\
+10	&	&s6	&	&	&	&	&	&11	&	&	&	&	\\
+11	&	&s12	&	&	&r1	&	&	&	&	&	&	&r1	\\
+12	&	&	&	&	&r4	&	&	&	&	&	&	&r4	\\
+13	&	&s12	&	&	&r6	&	&	&	&	&	&	&r6	\\
+14	&	&s12	&	&	&s7	&	&	&	&	&	&16	&	\\
+15	&	&	&s8	&	&	&s17	&	&	&	&	&	&	\\
+16	&	&	&	&	&r7	&	&	&	&	&	&	&r7	\\
+17	&	&	&	&	&r10	&	&	&	&	&	&	&r10	\\
+
+\end{tabular}
+
+\subsection*{c)}
+\begin{tabular}{l l l l }
+Matched	&Stack	&Input	&Action				\\
+\hline
+	&0	&dbbbef\$&$Shift$		\\
+d	&9	&bbbef\$&$Shift$		\\
+db	&6	&bbef\$	&reduce by $B \rightarrow b$			\\
+dB	&14	&bbef\$	&$Shift$		\\
+dBb	&12	&bef\$	&reduce by $B \rightarrow Bb$			\\
+dB	&14	&bef\$	&$Shift$		\\
+dBb	&12	&ef\$	&reduce by $B \rightarrow Bb$			\\
+dB	&14	&ef\$	&$Shift$		\\
+dBe	&7	&f\$	&reduce by $E \rightarrow e$			\\
+dBE	&15	&f\$	&$Shift$	\\
+dBEf	&17	&\$	&reduce by $F \rightarrow f$	\\
+dBEF 	&16	&\$	&reduce by $D \rightarrow dBEF$		\\
+D	&2	&\$	&reduce by $A \rightarrow D$			\\
+A	&1	&\$	&accept			\\
+\end{tabular}
+
+
+
+\end{document}
