@@ -6,29 +6,49 @@ extern int arch;
 extern int outputStage; 
 
 static char **strings;
+
 static int strings_size = 16, strings_index = -1;
 
 
 void symtab_init ( void )
 {
-    
+    strings = malloc(strings_size * sizeof(*strings));
 }
-
 
 void symtab_finalize ( void )
 {
-    
+	for(int i = 0; i <= strings_index; i++)
+		free(strings[i]);
+
+	free(strings);
+	
 }
 
-
 int strings_add ( char *str )
-{
-
-
+{	strings_index++;
     if(outputStage == 7)
         fprintf ( stderr, "Add strings (%s), index: %d \n", str, strings_index );
+	
+	if(strings_index >= strings_size)//Expand table
+	{
+		//http://www.cplusplus.com/reference/cstdlib/realloc/
+	//	strings_size *= 2;
+	//	fprintf(stderr, "buff arr: %d\n", strings_size);
+	//	*strings =  realloc(*strings, strings_size * sizeof(*strings));
+	//	fprintf(stderr, "realloced\n");
 
-    
+	//	if(more_strings != NULL) 
+	//	{
+	//		*strings = *more_strings;
+	//	} else {
+	//		fprintf(stderr, "Error reallocating, index: %d\n", strings_index);
+	//		free(strings);
+	//		exit (1);
+	//	}
+	}else//fjern denne når du får bufferinga til
+	{strings[strings_index] = str;}
+	
+ 	return strings_index;   
 }
 
 // Prints the data segment of the assembly code
