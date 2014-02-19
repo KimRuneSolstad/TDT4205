@@ -5,9 +5,14 @@
 extern int arch;
 extern int outputStage; 
 
-static char **strings;
+static char **strings, **more_strings;
 
-static int strings_size = 16, strings_index = -1;
+static int strings_size = 100 	/*
+								 * currently set to 100 as memoryleakage prevents the 
+								 * re-allocation of memory. However, the expansion code
+								 * should work.
+								 */
+, strings_index = -1;
 
 
 void symtab_init ( void )
@@ -23,7 +28,10 @@ void symtab_finalize ( void )
 	free(strings);
 	
 }
-
+/*
+ * Have some problems reallocating. Might be because of memory leakage.
+ * works fine when not simplifying.
+ */
 int strings_add ( char *str )
 {	strings_index++;
     if(outputStage == 7)
@@ -31,22 +39,22 @@ int strings_add ( char *str )
 	
 	if(strings_index >= strings_size)//Expand table
 	{
-		//http://www.cplusplus.com/reference/cstdlib/realloc/
-	//	strings_size *= 2;
-	//	fprintf(stderr, "buff arr: %d\n", strings_size);
-	//	*strings =  realloc(*strings, strings_size * sizeof(*strings));
-	//	fprintf(stderr, "realloced\n");
-
-	//	if(more_strings != NULL) 
-	//	{
-	//		*strings = *more_strings;
-	//	} else {
-	//		fprintf(stderr, "Error reallocating, index: %d\n", strings_index);
-	//		free(strings);
-	//		exit (1);
-	//	}
-	}else//fjern denne når du får bufferinga til
-	{strings[strings_index] = str;}
+		//http://www.cplusplus.com/reference/cstdlib/realloc/1
+		strings_size *= 2;
+	
+		more_strings = realloc(strings, strings_size * sizeof(char*));
+		
+		if(strings != NULL) 
+		{
+			strings = more_strings;
+			//fprintf(stderr, "Reallocation sucsessfull\n");
+		} else {
+			fprintf(stderr, "Error reallocating, index: %d\n", strings_index);
+			free(strings);
+			exit (1);
+		}
+	}
+	strings[strings_index] = str;
 	
  	return strings_index;   
 }
