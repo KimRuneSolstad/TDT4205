@@ -1,0 +1,111 @@
+\section{Symbol tables and blocks}
+\subsection{Show the content of the symbol tables at position 1 and 2 assuming a implementation using a stack of symbol tables.}
+
+\subsubsection*{Position 1}
+Scope A \\
+\begin{tabular}{|l l l|}
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Function table}} \\
+	Name & Type & Attributes	\\
+	\hline
+	main & void & 			\\
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Variable table}} \\
+	Name & Type &			\\
+	\hline
+	a & INT &			\\
+	b & FLOAT &			\\
+	\hline
+	\multicolumn{2}{|l}{\textbf{Scope}} & B \\
+	\hline
+\end{tabular} \\ 
+Scope B \\
+
+\begin{tabular}{|l l l|}
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Function table}} \\
+	Name & Type & Attributes	\\
+	\hline
+	main & void & 			\\
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Variable table}} \\
+	Name & Type &			\\
+	\hline
+	a & INT &			\\
+	b & FLOAT &			\\
+	\hline
+\end{tabular}
+
+\subsubsection*{Position 2}
+Scope A \\
+\begin{tabular}{|l l l|}
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Function table}} \\
+	Name & Type & Attributes	\\
+	\hline
+	main & void & 			\\
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Variable table}} \\
+	Name & Type &			\\
+	\hline
+	a & INT &			\\
+	b & FLOAT &			\\
+	\hline
+	\multicolumn{2}{|l}{\textbf{Scope}} & C \\
+	\hline
+\end{tabular} \\
+Scope C \\
+\begin{tabular}{|l l l|}
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Variable table}} \\
+	Name & Type &			\\
+	\hline
+	b & INT &			\\
+	c & FLOAT &			\\
+	\hline
+	\multicolumn{2}{|l}{\textbf{Scope}} & D \\
+	\hline
+\end{tabular} \\
+Scope D \\
+\begin{tabular}{|l l l|}
+	\hline
+	\multicolumn{3}{|l|}{\textbf{Variable table}} \\
+	Name & Type &			\\
+	\hline
+	a & BOOL &			\\
+	c & INT &			\\
+	\hline
+\end{tabular}
+
+\subsection*{b)}
+\subsubsection*{Position 1}
+\begin{tabular}{|l l l l l|}
+	\hline
+	\multicolumn{5}{|l|}{\textbf{Symbol table}} \\
+	Number & Name & Kind & Type & Scope	\\
+	\hline
+	1 & main & FUNC & VOID & A \\
+	2 & a & VAR & INT & A \\
+	3 & b & VAR & FLOAT & A \\
+	4 & b & VAR & BOOL & B \\ 
+	\hline
+\end{tabular}
+
+\subsubsection*{Position 2}
+\begin{tabular}{|l l l l l|}
+	\hline
+	\multicolumn{5}{|l|}{\textbf{Symbol table}} \\
+	Number & Name & Kind & Type & Scope	\\
+	\hline
+	1 & main & FUNC & VOID & A \\
+	2 & a & VAR & INT & A \\
+	3 & b & VAR & FLOAT & A \\
+	4 & b & VAR & INT & C \\
+	5 & c & VAR & FLOAT & C \\
+	6 & a & VAR & BOOL & D \\
+	7 & c & VAR & INT & D \\
+	\hline
+\end{tabular}
+\subsection*{c)}
+The disadvantage with using an individual table for each scope, is that we might need to search for a name in a number of symbol tables before the symbol is found. When using a single table, we do not need to chain between different tables to locate a name. Using a single table enable us locate a name faster than when using several. 
+

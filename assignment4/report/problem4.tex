@@ -1,0 +1,107 @@
+\section{Types, SDDs}
+\subsection*{a)}
+\begin{tabular}{l | l}
+
+Production 			& Semantic rule			\\
+\hline
+$T \rightarrow \textbf{int}$ 	& $T.val = 4$ 			\\ 
+$T \rightarrow \textbf{float}$	& $T.val = 8$			\\
+$T \rightarrow \textbf{bool}$	& $T.val = 1$			\\
+$T \rightarrow T[\textbf{num}]$	& $T.val = T.val * num.lexval$ 	\\
+$T \rightarrow (L)$		& $T.val = L.val$ 		\\
+$L \rightarrow L,T$		& $L.val = L.val + T.val$	\\
+$L \rightarrow T$		& $L.val = T.val$		\\
+\end{tabular}
+
+\subsection*{b)}
+\subsubsection*{i)}
+\tikzstyle{level 1}=[level distance=2cm, sibling distance=2cm]
+\tikzstyle{level 2}=[level distance=2cm, sibling distance=2cm]
+
+% Define styles for bags and leafs
+\tikzstyle{bag} = [text width=8em, text centered]
+\tikzstyle{end} = [circle, minimum width=3pt,fill, inner sep=0pt]
+
+% The sloped option gives rotated edge labels. Personally
+% I find sloped labels a bit difficult to read. Remove the sloped options
+% to get horizontal labels. 
+\begin{tikzpicture}[grow=right, sloped]
+\node[bag] {$T.val = 240$}
+	child {
+		node[end, label=right:
+		{$num.lexval = 5$}]{}
+	}
+	child {
+		node[bag] {$T.val = 48$}        
+		child {
+			node[end, label=right:
+			{$num.lexval = 3$}] {}
+            	}
+		child {
+			node[bag]{$T.val = 16$}
+			child{
+				node[end, label=right:
+				{$num.lexval = 4$}]{}
+			}
+			child{
+				node[end, label=right:
+				{$T.val = 4$}]{}
+			}
+		}
+		edge from parent         
+	};
+\end{tikzpicture}
+\tikzstyle{level 1}=[level distance=2cm, sibling distance=6cm]
+\tikzstyle{level 2}=[level distance=4cm, sibling distance=4cm]
+\tikzstyle{level 3}=[level distance=2cm, sibling distance=2cm]
+
+\subsubsection*{ii)}
+\begin{tikzpicture}[grow=right, sloped]
+\node[bag] {$T.val = 29$}
+	child {
+		node[bag]
+		{$L.val = 12$}
+		child{
+			node[end, label=right:
+			{$T.val = 8$}]{}
+		}
+		child{
+			node[bag]{$L.val = 4$}
+			child{
+				node[end, label=right:
+				{$T.val = 4$}]{}
+			}
+		}
+	}
+	child {
+		node[bag] {$T.val = 17$} 
+		child {
+			node[bag]{$L.val = 17$}
+			child{
+				node[bag]
+				{$T.val = 16$}
+				child{
+					node[end, label=right:
+					{$num.lexical = 4$}]{}
+				}
+				child{
+					node[end, label=right:
+					{$T.val = 4$}]{}
+				}
+			} child{
+				node[bag]{$L.val = 1$}
+%				child{}
+				child{
+					node[end, label=right:
+					{$T.val = 1$}]{}
+				}
+			}	
+            	}
+%		child {
+%				node[bag]{$T.val = 1$}{v}
+%		}
+		edge from parent         
+	};
+\end{tikzpicture}
+
+

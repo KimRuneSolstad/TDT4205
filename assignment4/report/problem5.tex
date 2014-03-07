@@ -1,0 +1,48 @@
+\section{SDDs (OPTIONAL)}
+FloatingPointLiteral = FPL \\
+DecimalFloatingPointLiteral = DFPL \\
+ExponentPart = EP \\
+FloatingTypeSuffix = FTS \\
+ExponentIndicator = EI \\
+SignedInteger = SI \\
+Sign = S \\
+Digits = D \\
+
+\begin{tabular}{l|l}
+\hline
+Production & Semantic Rules	\\
+\hline
+1) $FPL \rightarrow DFPL $		& $FPL.val = DFPL.val$					\\
+2) $DFPL \rightarrow D1 . D2 EP FTS$ 	& $DFPL.val =  (D_1.val + D_2.val*10^{-1})*EP.val$	\\
+					& $DFPL.err = DFPL.val > FTS.val$			\\
+3) $DFPL \rightarrow D1 . D2 EP$	& $DFPL.val = (D_1.val + D_2.val*10^{-1})*EP.val$	\\
+4) $DFPL \rightarrow D1 . D2$		& $DFPL.val = D_1.val + D_2.val*10^{-1}$ 		\\
+5) $DFPL \rightarrow D1 . D2 FTS$ 	& $D_1.val + D_2.val*10^{-1}$		\\
+					& $DFPL.err = DFPL.val > FTS.val$	\\	
+6) $DFPL \rightarrow D . EP FTS$& $DFPL.val = D.val * EP.val$			\\
+				& $DFPL.err = DFPL.val > FTS.val$		\\
+7) $DFPL \rightarrow D . FTS$ 	& $DFPL.val = D.val$ 				\\
+				& $DFPL.err = DFPL.val > FTS.val$ 		\\
+8) $DFPL \rightarrow D . EP$ 	& $DFPL.val = D.val * EP.val$			\\
+9) $DFPL \rightarrow . D EP FTS$& $DFPL.val = D.val * EP.val * 10^{-1}$	\\
+				& $DFPL.err = DFPL.val > FTS.val$	\\	
+10) $DFPL \rightarrow . D FTS$	& $DFPL.val = D.val * 10^{-1}$  	\\
+				& $DFPL.err = DFPL.val > FTS.val$	\\
+11) $DFPL \rightarrow . D EP$	& $DFPL.val = D.val * EP.val * 10^{-1}$	\\
+12) $DFPL \rightarrow D EP FTS$ 	& $DFPL.val = D.val * EP.val$		\\
+				& $DFPL.err = DFPl.val > FTS.val$	\\
+13) $DFPL \rightarrow D FTS$ 	& $DFPL.val = D.val$			\\
+				& $DFPL.err = DFPL.val > FTS.val$	\\
+14) $EP	\rightarrow EI SI$ & $EP.val =	10^{SI.val}$		\\
+15) $EI	\rightarrow e$	& 					\\
+16) $EI	\rightarrow E$ & 					\\
+17) $SI	\rightarrow S D$ & $SI.val = S.val * D.val$ 		\\
+18) $SI	\rightarrow D$ & $SI.val = D.val$ 			\\
+19) $S	\rightarrow +$ & $S.val = 1$				\\
+20) $S	\rightarrow -$	& $S.val = -1$				\\
+21) $FTS	\rightarrow f$ & $FTS.val = (2-2^{-23})*2^{127}$	\\
+22) $FTS	\rightarrow F$ & $FTS.val = (2-2^{-23})*2^{127}$	\\
+23) $FTS	\rightarrow d$ & $FTS.val = (2-2^{-52})*2^{1023}$	\\
+24) $FTS	\rightarrow D$ & $FTS.val = (2-2^{-52})*2^{1023}$ 
+ 
+\end{tabular}

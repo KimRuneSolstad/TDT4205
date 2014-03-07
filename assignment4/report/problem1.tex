@@ -1,0 +1,12 @@
+\section{Symbol Tables}
+\subsection{What is a symbol table, and why is it needed?}
+A symbol table is a datastructure used by compilers to hold information about source-program constructs. 
+\subsection{What kind of information is typically stored in a symbol table?}
+The symbol table typically contains entries with information about an identifier such as its character string, its type, its position in stoage, and other relevant data. 
+\subsection{Mention and briefly discuss the advantages and disadvantages of three different data structures that can be used to implement symbol tables.}
+\begin{enumerate}
+	\item{\emph{Array}: The use of an array to implement a symbol table is the simlpest approach. But having to know the number of entries in advance is impractical. Also, the table has a fixed size, making the implementer decide between creating a new array or do nothing when the symbol limit is reached. }
+	\item{\emph{List}: Using a list for implementation lets the symbol table grow dynamically during compilation. This implementation is inefficient because on average, half the list has to be scanned to find a symbol.}
+	\item{\emph{Has Table}: Hash tables are the most efficient structure. Done right, the hash-table can perform retrival and insertion in constant time. This also seems to be the most complicated implementation technique.}	
+
+\end{enumerate}
