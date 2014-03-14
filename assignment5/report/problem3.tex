@@ -1,0 +1,56 @@
+\lstset{language=[x86masm]Assembler}
+\section{Assembly programming}
+
+\begin{lstlisting}
+.label f:
+	PUSH {LR}
+	PUSH {FP}
+	MOV FP, SP
+
+	LDR R0, [FP, #12]	//param 1
+	LDR R1, [FP, #8]	//param 2
+	
+	MOV R2, R0		//local 1
+	PUSH {R1}		//save registers on stack
+	PUSH {R2}
+	PUSH {R3}
+
+	PUSH {R1}		//push parameters
+	PUSH {R3}
+	
+	MOV LR, PC		//save return adress in link register
+	
+	BL g 		
+	
+	POP {}			//remove parameters
+	POP {}	
+	
+	POP {R3}		//restores registers		
+	POP {R2}	
+	POP {R1}
+	
+	MOV SP, FP		//remove stack frame
+	POP {FP}		//restore old fp
+	
+	MOV R0 R0		//obviously not needed, but perhaps removing t would 
+				//count as an optimization
+	POP {PC}		//return
+	
+
+.label g
+	PUSH {LR}		//link register on stack
+	PUSH {FP}		//save old frame pointer on stack
+	MOV FP SP		//set new fp to top of stack
+	
+	LDR R0, [FP, #12]	//param 1(a)
+	LDR R1, [FP, #8]	//param 2(b)
+	
+	MOV SP, FP		//remove stack frame
+	POP {FP}		//restore old fp
+	MOV R0, R1		//store result in r0
+
+	POP {PC}		//return
+	
+	
+
+\end{lstlisting}
