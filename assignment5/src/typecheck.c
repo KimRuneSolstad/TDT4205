@@ -49,11 +49,11 @@ data_type_t typecheck_expression(node_t* root)
 			fprintf(stderr, "");	/*hack to avoid some wierd error */
 			function_symbol_t *func = malloc(sizeof(function_symbol_t));
 			func = function_get(root->children[0]->label);
-			if(func->nArguments != root->children[1]->n_children)
+			if(root->children[1] != NULL && func->nArguments != root->children[1]->n_children)
 				type_error(root);
 			else
 				for(int i = 0; i < func->nArguments; i++)
-					if(!equal_types(func->argument_types[i], root->children[1]->children[i]->data_type))
+					if(root->children[1] != NULL && !equal_types(func->argument_types[i], root->children[1]->children[i]->data_type))
 						type_error(root);
 			return func->return_type;
 		break;
