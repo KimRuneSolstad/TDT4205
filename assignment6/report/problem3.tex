@@ -1,0 +1,28 @@
+\section{Data-flow analysis}
+\subsection*{a)}
+The definition reaches a point if there is a path from the point immediately following the definition to the point, such that the definition is not killed along that path. The definition might be the place at wich the value of the variable was last defined.
+\subsection*{b)}
+\begin{tabular}{|l|l|c c c c c |}
+\hline
+Block	&	gen/kill & $OUT[B]^0$ & $IN[B]^1$ & $OUT[B]^1$ & $IN[B]^2$ & $OUT[B]^2$	\\
+\hline								%OUT^0		IN^1	OUT^1	IN^2	OUT^2
+\hline							
+\multirow{2}{*}{B1} 	& $gen\{d_1, d_2, d_3\}$ 		& 000 000 & 000 000 & 111 000 & 000 101 & 111 100  	\\
+			& $kill\{d_6, d_8, d_{10}, d_{12}\}$  	& 000 000 & 000 000 & 000 000 & 111 101 & 101 000 	\\
+\hline
+\multirow{2}{*}{B2} 	& $gen\{d_4, d_5\}$	 		& 000 000 & 111 000 & 011 110 & 111 100 & 011 110  	\\
+			& $kill\{d_1	\}$  			& 000 000 & 000 000 & 000 000 & 101 000 & 101 000 	\\
+\hline
+\multirow{2}{*}{B3} 	& $gen\{d_6, d_7\}$			& 000 000 & 011 110 & 001 111 & 011 110 & 001 111  	\\
+			& $kill\{d_2	\}$			& 000 000 & 000 000 & 100 000 & 101 000 & 101 000 	\\
+\hline
+\multirow{2}{*}{B4} 	& $gen\{d_8, d_9\}$			& 000 000 & 011 110 & 001 111 & 011 110 & 001 110  	\\
+			& $kill\{d_2	\}$			& 000 000 & 100 000 & 111 000 & 101 000 & 111 000 	\\
+\hline
+\multirow{2}{*}{B5} 	& $gen\{d_{10}, d_{12}\}$		& 000 000 & 001 111 & 000 101 & 001 111 & 000 101  	\\
+			& $kill\{d_3, d_5, d_{11}\}$		& 000 000 & 111 000 & 111 101 & 111 000 & 111 101 	\\
+\hline
+\end{tabular}
+
+
+\subsection{c)}

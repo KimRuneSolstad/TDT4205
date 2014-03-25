@@ -108,14 +108,13 @@ void gen_PROGRAM ( node_t *root, int scopedepth)
 		strings_output ( stderr );
 	instruction_add ( STRING, STRDUP( ".text" ), NULL, 0, 0 );
 
-	tracePrint("Starting PROGRAM%d\n", root->children[0]->children[0]->data_type.base_type);
+	tracePrint("Starting PROGRAM\n");
 
 	gen_default(root, scopedepth);//RECUR();
 
 	TEXT_DEBUG_FUNC_ARM();
 	TEXT_HEAD_ARM();
 	
-	/* TODO: Insert a call to the first defined function here */
 /*	Caller saves return address in link register.			*/	
 	instruction_add(MOVE, lr, pc, 0, 0);
 /*	Caller jumps to called function address.			*/	
@@ -138,7 +137,6 @@ void gen_PROGRAM ( node_t *root, int scopedepth)
  */
 void gen_FUNCTION ( node_t *root, int scopedepth )
 {
-
 	tracePrint ( "Starting FUNCTION (%s) with depth %d\n", root->label, scopedepth);
 
 	instruction_add(LABEL, STRDUP(root->label), NULL, 0, 0);
@@ -149,32 +147,27 @@ void gen_FUNCTION ( node_t *root, int scopedepth )
 /*	Callee sets new fp to top of stack.				*/	
 	instruction_add(MOVE, fp, sp, 0, 0);
 /*	Callee executes function (overwriting registers if necessary.)	*/	
+	tracePrint("GEN_FUNC: %d\n", root->children[1]->n_children);
 	for(int i = 0; i < root->children[1]->n_children; i++)	/* For each node in the statement list (root->children[1]) */
 		root->children[1]->children[i]->generate(root->children[1]->children[i], scopedepth + 1);
 /*	Callee sets sp to its fp 					*/	
 	instruction_add(MOVE, sp, fp, 0, 0); 
 /*	Callee sets restores old fp					*/	
 	instruction_add(POP, fp, NULL, 0, 0);
-/*	Callee stores result/return value in r0				*/	
-		
 /*	Callee jumps back to caller,and pops return address.		*/	
 	instruction_add(POP, pc, NULL, 0, 0);
 
 	//Leaving the scope, decreasing depth
 	tracePrint ("Leaving FUNCTION (%s) with depth %d\n", root->label, scopedepth);
-    
 }
-
-
-
 
 
 
 void gen_DECLARATION_STATEMENT (node_t *root, int scopedepth)
 {
 	tracePrint("Starting DECLARATION: adding space on stack\n");
-//	instruction_add(PUSH, root->label, NULL, 0, 0);
-	
+	instruction_add(MOVE, r0, "#0", 0, 0);
+	instruction_add(PUSH, r0, NULL, 0, 0);	
 	
 	tracePrint("Ending DECLARATION\n");
 }
@@ -251,42 +244,25 @@ void gen_PRINT_STATEMENT(node_t* root, int scopedepth)
 
 void gen_EXPRESSION ( node_t *root, int scopedepth )
 {
-	
 	tracePrint ( "Starting EXPRESSION of type %s\n", (char*) root->expression_type.text);
 
-//			/* Caller saves registers on stack */
-			char reg[2];
-			for(int i = 0; i < 1; ++i)
-			{
-				sprintf(reg, "r%d", i);
-				instruction_add(PUSH, STRDUP(reg), NULL, 0, 0); 
-			}
-//			/* Caller saves parameters on stack */
-			if(root->children[1] != NULL)
-				for(int i = 0; i < root->children[1]->n_children; ++i)
-				{
-					char param[1000];
-					sprintf(param, "#%d", root->children[1]->children[i]->int_const);//TODO: add support for all constants
-					instruction_add(MOVE, r0, STRDUP(param), 0, 0);
-					instruction_add(PUSH, r0, NULL, 0, 0);
-				}
-//			/*Caller saves return address in link register */
-			instruction_add(MOVE, pc, lr, 0, 0);
-			/*Caller jumps to called function address.*/	
-			instruction_add(CALL, STRDUP(root->children[0]->label), NULL, 0, 0);	
-			/*Caller removes parameters */
-//			if(root->children[1] != NULL)
-//				for(int i = 0; i < root->children[1]->n_children; ++i)
-//					instruction_add(POP, NULL, NULL, 0, 0);
-			/*Caller restores registers*/
-			for(int i = 0; i = 0; --i)
-			{
-				sprintf(reg, "r%d", i);
-				instruction_add(POP, STRDUP(reg), NULL, 0, 0);
-			}
-			/*Caller uses result */	
-			instruction_add(PUSH, r0, NULL, 0, 0);
-
+	/* Caller saves registers on stack */
+	instruction_add(PUSH, r1, NULL, 0, 0); 
+      	/* Caller saves parameters on stack */
+	if(root->children[1] != NULL)
+		for(int i = 0; i < root->children[1]->n_children; ++i)
+			root->children[1]->children[i]->generate(root->children[1]->children[i], scopedepth -1);
+	/* Caller saves return address in link register */
+	instruction_add(MOVE, lr, pc, 0, 0);
+      	/* Caller jumps to called function address. */	
+     	instruction_add(CALL, STRDUP(root->children[0]->label), NULL, 0, 0);	
+      	/* Caller removes parameters */
+	/* Caller restores registers */
+	instruction_add(POP, r1, NULL, 0, 0);
+	/* Caller uses result */	
+	instruction_add(PUSH, r0, NULL, 0, 0);
+	/* To avoid error message from gen_PRINT_STATEMENT, we set this nodes base_type to the return type */
+	root->data_type = root->function_entry->return_type;
 	tracePrint ( "Ending EXPRESSION of type %s\n", (char*) root->expression_type.text);
 }
 
@@ -294,8 +270,7 @@ void gen_EXPRESSION ( node_t *root, int scopedepth )
 void gen_VARIABLE ( node_t *root, int scopedepth )
 {
 	
-	tracePrint ( "Starting VARIABLE\n");
-	
+	tracePrint ( "Starting VARIABLE\n");	
 	instruction_add(LOAD, r0, fp, 0, root->entry->stack_offset);
 	instruction_add(PUSH, r0, NULL, 0, 0);
 	tracePrint ( "End VARIABLE %s, stack offset: %d\n", root->label, root->entry->stack_offset);
@@ -304,7 +279,6 @@ void gen_VARIABLE ( node_t *root, int scopedepth )
 void gen_CONSTANT (node_t * root, int scopedepth)
 {
 	tracePrint("Starting CONSTANT%d\n", root->data_type.base_type);
-		
 	char  buf[100];
 	switch(root->data_type.base_type)
 	{
@@ -313,11 +287,11 @@ void gen_CONSTANT (node_t * root, int scopedepth)
 		instruction_add(MOVE32, STRDUP(buf), r0, 0, 0);
 		break;
 	case BOOL_TYPE:
-		sprintf(buf, "%d", root->bool_const);
+		sprintf(buf, "#%d", root->bool_const);
 		instruction_add(MOVE, r0, STRDUP(buf), 0, 0);	
 		break;
 	case INT_TYPE:
-		sprintf(buf, "%d", root->int_const);
+		sprintf(buf, "#%d", root->int_const);
 		instruction_add(MOVE, r0, STRDUP(buf), 0, 0);
 		break;
 	default:
@@ -325,42 +299,28 @@ void gen_CONSTANT (node_t * root, int scopedepth)
 		break;
 	}
 
-	
 	instruction_add(PUSH, r0, NULL, 0, 0);
 	tracePrint("End CONSTANT\n");
 }
 
 void gen_ASSIGNMENT_STATEMENT ( node_t *root, int scopedepth )
 {
-	
 	tracePrint ( "Starting ASSIGNMENT_STATEMENT\n");
-	if(root->children[1]->expression_type.index == FUNC_CALL_E)
-		root->children[1]->generate(root->children[1], scopedepth -1);
-
-	else if(root->children[1]->expression_type.index == CONSTANT_E)
-	{	//TODO: skjekk alle constant typer
-		tracePrint("TEST\n");
-	}
+	root->children[1]->generate(root->children[1], scopedepth - 1);
+	
 	/* The right value should now exist on top of stack */
 	instruction_add(POP, r0, NULL, 0, 0);
-	instruction_add(STORE, r0, fp, 0, -4); 
+	instruction_add(STORE, r0, fp, 0, root->children[0]->entry->stack_offset); 
 
 	tracePrint ( "End ASSIGNMENT_STATEMENT\n");
 }
 
 void gen_RETURN_STATEMENT ( node_t *root, int scopedepth )
 {
-	char param[1];
 	tracePrint ( "Starting RETURN_STATEMENT\n");
-	switch(root->children[0]->data_type.base_type)
-	{
-	case INT_TYPE:
-		sprintf(param, "%d", root->children[0]->int_const); 
-		instruction_add(MOVE, r0, STRDUP(param), 0, 0);
-	case FLOAT_TYPE:
-		sprintf(param, "%f", root->children[0]->float_const);
-	}
-
+	
+	root->children[0]->generate(root->children[0], scopedepth + 1);
+	instruction_add(POP, r0, NULL, 0, 0);
 
 	tracePrint ( "End RETURN_STATEMENT\n");
 }

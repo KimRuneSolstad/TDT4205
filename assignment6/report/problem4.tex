@@ -1,0 +1,26 @@
+\section{Register allocation}
+
+\subsection*{a)}
+The variable is live at point \emph{p} if its value could be used along some path in the flow graph starting at \emph{p}. Otherwise the variable is dead at that point. 
+
+\subsection*{b)}
+
+\begin{tikzpicture}
+	\node[blue node] (1) {$a$};
+	\node[green node] (4) [right = 1.3cm of 1]{$b$};
+	\node[red node] (3) [below = 1.3cm of 4]{$c$};
+	\node[green node] (2) [left = 1.3cm  of 3]{$e$};
+	\node[red node] (5) [above = 1.3cm of 4]{$d$};
+	\path[draw,thick]
+		(3) edge node {} (1)
+		(1) edge node {} (2)
+		(2) edge node {} (3)
+		(3) edge node {} (4)
+		(1) edge node {} (4)
+		(4) edge node {} (5)
+		(1) edge node {} (5)
+		;
+\end{tikzpicture}
+
+\subsection*{c)}
+After a quick coloring of the interference graph, I have concluded that 3 registers are deeded. 

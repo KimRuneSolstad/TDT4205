@@ -1,0 +1,74 @@
+\section{Optimization}
+\subsection*{a)}
+A variable is said to be an \emph{induction variable} if there is a constant such that each time the variable is assigned, its value is increased by c. A \emph{strength reduction} is when you replace an expensive operation, such as multipication, by a cheaper one such as addition. 
+\subsection*{b)}
+B1\begin{tabular}{|l|}
+\hline
+int i = 0	\\
+\hline
+\end{tabular}	\\
+B2\begin{tabular}{|l|}
+\hline
+if i $>=$ a goto B6	\\
+\hline
+\end{tabular}	\\
+B3\begin{tabular}{|l|}
+\hline
+i = i + 1	\\
+sum = 4 * i	\\
+int j = 0	\\
+\hline
+\end{tabular}	\\
+B4\begin{tabular}{|l|}
+\hline
+if j $>=$ m goto B2	\\
+\hline
+\end{tabular}	\\
+B5\begin{tabular}{|l|}
+\hline
+j = j + i	\\
+a = a + b * 2	\\
+\hline
+\end{tabular}	\\
+B6\begin{tabular}{|l|}
+\hline
+exit	\\
+\hline
+\end{tabular}	\\
+
+\subsection*{c)}
+B1\begin{tabular}{|l|}
+\hline
+int sum = 0	\\
+int j = 0	\\
+int c = b + b	\\
+\hline
+\end{tabular}	\\
+B2\begin{tabular}{|l|}
+\hline
+if sum $>=$ a + a + a + a goto B6	\\
+\hline
+\end{tabular}	\\
+B3\begin{tabular}{|l|}
+\hline
+sum = sum + 4	\\
+\hline
+\end{tabular}		\\
+B4\begin{tabular}{|l|}
+\hline
+if j $>=$ m goto B2	\\
+\hline
+\end{tabular}	\\
+B5\begin{tabular}{|l|}
+\hline
+j = j + sum / 4	\\
+a = a + c	\\
+goto B4		\\
+\hline
+\end{tabular}	\\
+B6\begin{tabular}{|l|}
+\hline
+exit	\\
+\hline
+\end{tabular}	\\
+

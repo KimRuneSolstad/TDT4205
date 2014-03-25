@@ -1,0 +1,41 @@
+\section{Optimization}
+\subsection*{a)}
+An occurence of an expression E is called a common subexpression if E was previously computed and  the values of the variables in E have not changed since the previous computations. To perform a common subexpression elimination on the flow graph, the \emph{e}-assignment can be removed and {e} can be replaced by \emph{i}. \\
+\subsection*{b)}
+Copy Propagation is to use \emph{v} for \emph{u} whenever possible after the copy statement \emph{u = v}. Below is an example of B3 after copy propagation.\\
+\begin{tabular}{|l|}
+\hline
+t = a * c	\\
+i = i + a * c	\\
+j = i		\\
+d = 0		\\
+d = i + 2	\\
+e = i + t	\\
+f = f * (i + t) \\
+\hline
+\end{tabular}
+
+\subsection*{c)}
+The "code motion" transformation takes an expression that yields the same result independent of the number os times a loop is executed and evaluates the expression outside the loop.\\
+B1
+\begin{tabular}{|l|}
+\hline
+i = 1		\\
+t = a * c	\\
+d = 0		\\
+\hline
+\end{tabular}
+B3
+\begin{tabular}{|l|}
+\hline
+i = i + t	\\
+j = i		\\
+d = j + 2	\\
+e = i + t	\\
+f = f * e	\\
+\hline
+\end{tabular}
+
+\subsection*{c)}
+Dead code is code that never gets used. Dead code is never introduced intentionally by the programmer, as it does not improve readabillity. A conditional statement that will always be false is an example of dead code. In the flow graph, the \emph{d = 0} statement will never be used for anything, removing it would be a \emph{dead code elimination}.
+
